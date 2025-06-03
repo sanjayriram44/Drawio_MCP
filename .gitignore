@@ -1,6 +1,120 @@
-# gitignore template for LangChain products, e.g., LangGraph, LangSmith
-# website: https://www.langchain.com/
-# website: https://www.langchain.com/langgraph
+# ------------------------
+# Python Bytecode & Cache
+# ------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+*.egg
+*.manifest
+*.spec
 
-# LangGraph
-.langgraph_api/
+# ------------------------
+# Virtual Environment
+# ------------------------
+.venv/
+.env
+venv/
+env/
+ENV/
+myenv/
+*.env
+.env.*
+*.envrc
+
+# ------------------------
+# VS Code / Editor Configs
+# ------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# ------------------------
+# System Files
+# ------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.bak
+*.tmp
+*.log
+
+# ------------------------
+# Draw.io / Diagrams.net
+# ------------------------
+*.drawio.bkp
+*.drawio~*
+*.drawio.svg
+*.drawio.png
+*.drawio.pdf
+*.vsdx
+*.drawio.autosave
+
+# ------------------------
+# MCP / LangChain Runtime Artifacts
+# ------------------------
+.mcp/
+.langchain/
+cache/
+__mcp_temp__/
+
+# ------------------------
+# Jupyter / IPython (if used)
+# ------------------------
+.ipynb_checkpoints
+*.ipynb
+*.jsonl
+
+# ------------------------
+# OS Metadata
+# ------------------------
+*.localized
+*.Spotlight-V100
+*.Trashes
+
+# ------------------------
+# Logs & Debug
+# ------------------------
+*.log
+*.out
+*.err
+*.pid
+nohup.out
+
+# ------------------------
+# Distribution / Build Artifacts
+# ------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# ------------------------
+# Testing & Coverage
+# ------------------------
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+pytest_cache/
+.pytest_cache/
+*.cover
+
+# ------------------------
+# LLM / Prompt Logs (optional)
+# ------------------------
+prompts_output/
+llm_debug/
+*.prompt.txt
+*.response.xml
