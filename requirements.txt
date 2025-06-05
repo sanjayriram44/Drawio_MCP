@@ -5,3 +5,5 @@ mcp
 langchain-mcp-adapters
 dotenv
 langgraph
+langchain-google-genai
+streamlit
