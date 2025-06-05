@@ -1,0 +1,60 @@
+user_prompt = """
+Create a system architecture diagram for an AI Agent Execution Platform. The diagram should follow these simplified design requirements:
+
+## Overall Structure
+- Create a main bounding box or group labeled **"ATOMIC" AGENT**. This will contain the core agent processing components.
+
+## User Access
+- Two types of users: **Testing User** and **Production User**.
+- Both user types interact with a **Web App**.
+
+## Agent Processing Flow (within "ATOMIC" AGENT)
+- The **Web App** sends requests to a **Queue Management Service**.
+- The **Queue Management Service** (Rhombus) feeds into an **Agentic Framework**.
+    - The **Agentic Framework** should explicitly state it can use (AutoGen, LangGraph, CrewAI).
+- The **Agentic Framework** connects to:
+    - A **Playground** interface.
+    - **Model Selection** module.
+    - **Model Serving** layer.
+    - **Redis/Memcache (Caching Service)** (Cylinder).
+- The **Model Serving** layer utilizes external **Large Language Models** (Cloud shapes for Gemini, Claude, and a generic Databricks/Mistral).
+- Results from the **Model Serving** layer are sent to an **Evaluation Framework**.
+- The **Evaluation Framework** sends data to a **Tracking Service** (e.g., MLflow, depicted as a Hexagon).
+
+## RAG Data Pipeline (separate but connected to "ATOMIC" AGENT)
+- Data Ingestion via:
+    - **Unstructured Data (via Files API)** feeding into a **RAG Ingestion Pipeline**.
+    - **Structured Data (via SQL/DataFrame API)** feeding into **Delta Table / Data Products** (Cylinder).
+- The **RAG Ingestion Pipeline** consists of:
+    - **Document Loader & Parser**.
+    - **Text Splitter & Chunker**.
+    - **Embedding Generator**.
+- Embeddings are stored in a **Databricks Vector Store** (Cylinder).
+- The **Agentic Framework** (within "ATOMIC" AGENT) performs **Vector Search** on the **Databricks Vector Store**.
+
+## Control and Catalog Layer
+- An **MCP Wrapper (Agent & Function Selector)** interacts with the **Agentic Framework**.
+- The **MCP Wrapper** also connects to:
+    - **Agent Registry**.
+    - **Unity Catalog**.
+    - **Genie** (Logic/rules engine).
+    - **Functions** (UC Function Calling).
+- The **Unity Catalog** is a central component that:
+    - Stores metadata, agent definitions, and model links.
+    - Connects to **Genie**.
+    - Connects to **Functions**.
+    - Receives data from a **User Feedback Loop**.
+    - Internally might show placeholders for **Models** and **Volume**.
+
+## Data Storage
+- **Redis/Memcache (Caching Service)** (Cylinder)
+- **Databricks Vector Store** (Cylinder)
+- **Delta Table / Data Products** (Cylinder)
+- **Tracking Service** backend (mention PostgreSQL/MongoDB if needed)
+
+## General Design Rules
+- Left-to-right or top-to-bottom data flow.
+- Use defined shapes consistently.
+- Group related components visually.
+- Optimize for black background.
+"""
