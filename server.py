@@ -3,6 +3,7 @@ from langgraph.graph import StateGraph, START, END
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from prompts.system_prompt import system_message
+from prompts.verify_code_prompt import verify_code_prompt
 from dataclasses import dataclass, field
 from langchain_groq import ChatGroq
 import subprocess
@@ -64,20 +65,10 @@ def generate_code_node(state: WorkflowState):
     return state
 
 def verify_code_node(state: WorkflowState):
-    llm = ChatGroq(model="llama-3.1-8b-instant")
+    llm = ChatGroq(model="llama-3.3-70b-versatile")
     prompt = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
-            """You are a fixer agent for Draw.io XML diagrams.
-
-Your job is to take a possibly broken or incomplete XML string that should be used in Draw.io and return a fully corrected and valid XML file.
-
-**Important rules:**
-- Only output valid XML — starting with <mxfile> or <mxGraphModel>
-- DO NOT add explanations, comments, or markdown
-- DO NOT wrap the response in code blocks like ```xml
-- DO NOT say anything like "Here is the fixed XML"
-- Just return clean, raw XML — nothing else
-"""
+            verify_code_prompt
         ),
         HumanMessagePromptTemplate.from_template("{input}")
     ])
@@ -110,15 +101,18 @@ def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png")
     if not xml_content or "<mx" not in xml_content:
         return json.dumps({"error": "Generated XML is invalid or empty"})
 
+    if not filename.endswith(".drawio"):
+        filename += ".drawio"
+
     drawio_path = os.path.expanduser(f"~/Downloads/{filename}")
+
     try:
         with open(drawio_path, "w", encoding="utf-8") as f:
             f.write(xml_content)
     except Exception as e:
         return json.dumps({"error": f"Failed to write .drawio file: {e}"})
 
-    # Slight delay just in case I/O lags
-    time.sleep(0.2)
+    
 
     export_path = drawio_path.replace(".drawio", f".{fmt}")
     if not os.path.exists(drawio_path):
