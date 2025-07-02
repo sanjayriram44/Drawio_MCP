@@ -4,6 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTempla
 from langchain_google_genai import ChatGoogleGenerativeAI
 from prompts.system_prompt import system_message
 from prompts.verify_code_prompt import verify_code_prompt
+from langgraph.checkpoint.memory import MemorySaver
 from dataclasses import dataclass, field
 from langchain_groq import ChatGroq
 import subprocess
@@ -25,11 +26,14 @@ class WorkflowState:
     code_instructions: str = None
     messages: List[Any] = field(default_factory=list)
 
+memory = MemorySaver()
+
+
 graph_builder = StateGraph(WorkflowState)
 mcp = FastMCP('DrawIO')
 
 def generate_plan_node(state: WorkflowState):
-    llm = ChatGroq(model="meta-llama/llama-4-maverick-17b-128e-instruct")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-preview-05-20")
     prompt = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
             "You are the first node in a chain of xml generating system. Simplify the user's input into structured instructions for the next nodes. Be clear and avoid mistakes."
@@ -65,7 +69,7 @@ def generate_code_node(state: WorkflowState):
     return state
 
 def verify_code_node(state: WorkflowState):
-    llm = ChatGroq(model="llama-3.3-70b-versatile")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-preview-05-20")
     prompt = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
             verify_code_prompt
@@ -93,8 +97,9 @@ graph_builder.add_edge("verify_code", END)
 @mcp.tool()
 def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png") -> str:
     state = WorkflowState(user_prompt=input)
-    graph = graph_builder.compile()
-    result = graph.invoke(state)
+    config = {"configurable": {"thread_id": "1"}}
+    graph = graph_builder.compile(checkpointer=memory)
+    result = graph.invoke(state,config)
 
     xml_content = result.get("xml_code") if result else None
 

@@ -8,6 +8,8 @@ from langchain_mcp_adapters.tools import load_mcp_tools
 from mcp.client.stdio import stdio_client
 import traceback
 
+
+st.set_page_config(layout="wide")
 st.title("DrawIO PNG Generator")
 
 server_params = StdioServerParameters(
