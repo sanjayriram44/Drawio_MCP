@@ -1,0 +1,19 @@
+# Ignore Python bytecode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environment directory
+myenv/
+
+# Ignore Dockerfile and other sensitive files (such as credentials)
+Dockerfile
+docker-compose.yml
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.swp
+*.bak
+*.sqlite3

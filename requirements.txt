@@ -7,3 +7,5 @@ dotenv
 langgraph
 langchain-google-genai
 streamlit
+fastapi
+uvicorn

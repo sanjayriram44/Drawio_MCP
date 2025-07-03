@@ -27,10 +27,10 @@ class WorkflowState:
     messages: List[Any] = field(default_factory=list)
 
 memory = MemorySaver()
-
-
 graph_builder = StateGraph(WorkflowState)
-mcp = FastMCP('DrawIO')
+
+# FastMCP server initialization
+mcp = FastMCP("DrawIO",host="0.0.0.0", port=8000)
 
 def generate_plan_node(state: WorkflowState):
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-preview-05-20")
@@ -99,7 +99,7 @@ def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png")
     state = WorkflowState(user_prompt=input)
     config = {"configurable": {"thread_id": "1"}}
     graph = graph_builder.compile(checkpointer=memory)
-    result = graph.invoke(state,config)
+    result = graph.invoke(state, config)
 
     xml_content = result.get("xml_code") if result else None
 
@@ -117,21 +117,20 @@ def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png")
     except Exception as e:
         return json.dumps({"error": f"Failed to write .drawio file: {e}"})
 
-    
-
     export_path = drawio_path.replace(".drawio", f".{fmt}")
     if not os.path.exists(drawio_path):
         return json.dumps({"error": "Expected .drawio file not found, export aborted."})
 
+   
     try:
+        
         subprocess.run([
-            "/Applications/draw.io.app/Contents/MacOS/draw.io",
-            "-x",
-            "-f", fmt,
-            "--scale", "2.5",
-            "-o", export_path,
-            drawio_path
+            "docker", "run", "--rm", "-v", f"/Users/sanjaysriram/Downloads:/data",
+            "rlespinasse/drawio-desktop-headless", "-f", fmt, "-o", f"/data/{filename.replace('.drawio', f'.{fmt}')}",
+            f"/data/{filename}"
         ], check=True)
+
+
     except subprocess.CalledProcessError as e:
         return json.dumps({"error": f"Draw.io export failed: {e}"})
 
@@ -141,4 +140,6 @@ def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png")
     })
 
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    
+    mcp.run(transport="streamable-http",mount_path="/mcp")
+
