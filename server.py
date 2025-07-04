@@ -95,6 +95,7 @@ graph_builder.add_edge("generate_code", "verify_code")
 graph_builder.add_edge("verify_code", END)
 
 @mcp.tool()
+@mcp.tool()
 def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png") -> str:
     state = WorkflowState(user_prompt=input)
     config = {"configurable": {"thread_id": "1"}}
@@ -117,25 +118,7 @@ def generate_xml(input: str, filename: str = "diagram.drawio", fmt: str = "png")
     except Exception as e:
         return json.dumps({"error": f"Failed to write .drawio file: {e}"})
 
-    export_path = drawio_path.replace(".drawio", f".{fmt}")
-    if not os.path.exists(drawio_path):
-        return json.dumps({"error": "Expected .drawio file not found, export aborted."})
-
-   
-    try:
-        
-        subprocess.run([
-            "docker", "run", "--rm", "-v", f"/Users/sanjaysriram/Downloads:/data",
-            "rlespinasse/drawio-desktop-headless", "-f", fmt, "-o", f"/data/{filename.replace('.drawio', f'.{fmt}')}",
-            f"/data/{filename}"
-        ], check=True)
-
-
-    except subprocess.CalledProcessError as e:
-        return json.dumps({"error": f"Draw.io export failed: {e}"})
-
     return json.dumps({
-        "png_path": export_path,
         "drawio_path": drawio_path
     })
 
