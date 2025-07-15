@@ -27,11 +27,15 @@ A modular client-server setup for generating **Draw.io diagrams** using natural 
 
 ├── Dockerfile # Containerization setup
 
+
 ├── requirements.txt # Python dependencies
+
 
 ├── prompts/ # Prompt templates
 
+
 ├── LICENSE
+
 
 ├── README.md
 
@@ -46,10 +50,12 @@ pip install -r requirements.txt
 ```
 
 ### 2. Set environment variables
+
 Make sure .env includes:
 
-GROQ_API_KEY=your_key_here
-GOOGLE_API_KEY=your_key_here
+1. GROQ_API_KEY=your_key_here
+
+2. GOOGLE_API_KEY=your_key_here
 
 
 ### 3. Start the server
