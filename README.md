@@ -1,4 +1,4 @@
-# Drawio_MCP
+# Drawio MCP
 
 A modular client-server setup for generating **Draw.io diagrams** using natural language prompts. It uses **LangGraph**, **LangChain**, **Gemini 2.5**, and a **FastMCP**-based server to convert text into XML diagram code and serve it via a tool-based API.
 
