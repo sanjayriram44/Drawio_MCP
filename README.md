@@ -20,11 +20,19 @@ A modular client-server setup for generating **Draw.io diagrams** using natural 
 
 
 ├── client.py # Streamlit UI
+
+
 ├── server.py # FastMCP-based server
+
+
 ├── Dockerfile # Containerization setup
+
 ├── requirements.txt # Python dependencies
+
 ├── prompts/ # Prompt templates
+
 ├── LICENSE
+
 ├── README.md
 
 ---
